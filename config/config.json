@@ -1,0 +1,30 @@
+{
+  "server": {
+    "port": 3000,
+    "host": "0.0.0.0"
+  },
+  "dashboard": {
+    "title": "PhantomLink • Live Control",
+    "theme": "glassmorphism-dark"
+  },
+  "tunnels": {
+    "enabled": ["localtunnel", "cloudflared"],
+    "localtunnelSubdomain": "phantomlink",
+    "autoRotate": true
+  },
+  "notifications": {
+    "webhookUrl": "",
+    "qrInTerminal": false
+  },
+  "stealth": {
+    "fakeUserAgent": true,
+    "blockScanners": true
+  },
+  "https": {
+    "enabled": false
+  },
+  "admin": {
+    "enabled": true,
+    "password": "password-secure"
+  }
+}

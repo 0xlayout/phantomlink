@@ -1,0 +1,43 @@
+{
+  "name": "phantomlink",
+  "version": "2.0.0",
+  "description": "The most advanced open-source phishing framework of 2025 – Pure Node.js",
+  "main": "src/core/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node src/core/server.js",
+    "dev": "node --watch src/core/server.js",
+    "docker:build": "docker compose up --build -d",
+    "docker:logs": "docker compose logs -f"
+  },
+  "keywords": [
+    "phishing",
+    "redteam",
+    "pentest",
+    "cybersecurity",
+    "nodejs"
+  ],
+  "author": "Cristian Querol Alves",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2",
+    "cli-table3": "^0.6.5",
+    "compression": "^1.7.4",
+    "cors": "^2.8.5",
+    "express": "^4.19.2",
+    "figlet": "^1.7.0",
+    "gradient-string": "^2.0.2",
+    "greenlock-express": "^4.0.3",
+    "helmet": "^7.1.0",
+    "node-fetch": "^3.3.2",
+    "ora": "^8.0.1",
+    "picocolors": "^1.0.1",
+    "qrcode-terminal": "^0.12.0",
+    "random-useragent": "^0.5.0",
+    "socket.io": "^4.7.5",
+    "ua-parser-js": "^2.0.7"
+  }
+}

