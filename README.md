@@ -214,4 +214,4 @@ Please adhere to the code of conduct and ensure all submissions are original and
 ## License
 
 PhantomLink is released under the MIT License. See the LICENSE file for full details.
-Copyright © 2025 0xlayout. All rights reserved.
+Copyright © 2026 0xlayout. All rights reserved.
