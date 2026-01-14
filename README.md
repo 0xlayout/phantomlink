@@ -169,7 +169,7 @@ Navigate to `http://localhost:3000/dashboard` (or the equivalent tunnel URL). Up
 ### Customizing Templates
 To add or modify templates:
 
-- Create a new directory in templates/ (e.g., templates/custom-service/).
+- Create a new directory in `templates/` (e.g., `templates/custom-service/`).
 - Place an index.html file with a form targeting /capture?t=custom-service.
 - The framework automatically injects geolocation and screenshot capture scripts, ensuring compatibility and stealth.
 
@@ -205,9 +205,9 @@ The developers disclaim all liability for any damages or legal consequences aris
 We encourage contributions from the security community to enhance PhantomLink. To contribute:
 
 1. Fork the repository.
-2. Create a feature branch (git checkout -b feature/YourFeature).
-3. Commit your changes (git commit -m "Add YourFeature").
-4. Push to the branch (git push origin feature/YourFeature).
+2. Create a feature branch (`git checkout -b feature/YourFeature`).
+3. Commit your changes (`git commit -m "Add YourFeature"`).
+4. Push to the branch (`git push origin feature/YourFeature`).
 5. Open a Pull Request, detailing the changes and their benefits.
 Please adhere to the code of conduct and ensure all submissions are original and licensed under MIT.
 
